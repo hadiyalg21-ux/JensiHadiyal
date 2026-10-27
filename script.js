@@ -77,7 +77,7 @@ const CONFIG = {
       options: ["Hu tne reels mokli sku?", "Let's play BGMI.", "Where are you going?", "Will you call me?"], answer: 0 },
     { q: "Which games did we play together?",
       options: ["Cricket league and BGMI.", "Chess only.", "Racing games only.", "None."], answer: 0 },
-    { q: "What did you give me at my brother's wedding?",
+    { q: "What did you give me at our brother's wedding?",
       options: ["A bracelet.", "A watch.", "A ring.", "A book."], answer: 0 },
     { q: "What did I give you?",
       options: ["A keychain.", "A bracelet.", "A hoodie.", "A wallet."], answer: 0 },
@@ -161,7 +161,7 @@ And I said ha. Bas, pachi toh reels, roasting, fun, games and our everyday talks
 
 Babyyy, I don't think you even realize how special that is to me.
 
-I still remember when you came to my brother's wedding and gave me that bracelet. I gave you a keychain, and even though they were little gifts, that memory means something special to me. ❤️
+I still remember when you came to our brother's wedding and gave me that bracelet. I gave you a keychain, and even though they were little gifts, that memory means something special to me. ❤️
 
 And then comes 29 August, raat na 10:40. 🥹 You proposed to me through a reel, and look at me now! Obviously, my answer was TU TO ACCEPTED HI HAI! 😂❤️
 
@@ -195,7 +195,7 @@ I hope this new year of your life brings you happiness, peace, success, and ever
 
 And selfishly, I hope I get to be beside you for lots of your birthdays to come. 🥹❤️
 
-My best friend.
+My babyyyyyyy.
 My pookieeeeeee.
 My favorite person.
 My loveeeeee.
@@ -215,6 +215,7 @@ I love you more than I can explain, babyyyyyyyy.
   finalEnd: [
     "Happy Birthday, bachaaaaaa!",
     "Hu tane khub khub prem karu chhu. ❤️",
+    "lots of Loveee, Hugsss and Kissess",
     "— From your Jenuuu babbyyyyyy❤️"
   ],
 
