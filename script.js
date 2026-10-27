@@ -33,7 +33,7 @@ const CONFIG = {
   passwordHint: "Think of a date: the day and the month, written together. 😉",
 
   /* ---- Music (put the file in the audio/ folder) ---- */
-  music: "birthday-song.mp3",
+  music: "./birthday-song.mp3",
 
   /* ---- Heart-catching game ---- */
   game: {
