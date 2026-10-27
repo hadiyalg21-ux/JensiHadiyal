@@ -604,6 +604,7 @@ const Music = (() => {
   const btn = $("#musicBtn");
   const icon = $("#musicIcon");
   audio.src = CONFIG.music;
+   audio.load();
   function setUi(on) {
     btn.classList.toggle("playing", on);
     btn.setAttribute("aria-pressed", String(on));
