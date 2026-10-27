@@ -33,7 +33,7 @@ const CONFIG = {
   passwordHint: "Think of a date: the day and the month, written together. 😉",
 
   /* ---- Music (put the file in the audio/ folder) ---- */
-  music: "audio/birthday-song.mp3",
+  music: "birthday-song.mp3",
 
   /* ---- Heart-catching game ---- */
   game: {
@@ -46,12 +46,12 @@ const CONFIG = {
      Add or remove lines. Leave caption "" for no caption.
      If a file is missing, a pretty placeholder is shown instead. */
   photos: [
-    { src: "images/photo1.jpg", caption: "" },
-    { src: "images/photo2.jpg", caption: "" },
-    { src: "images/photo3.jpg", caption: "" },
-    { src: "images/photo4.jpg", caption: "" },
-    { src: "images/photo5.jpg", caption: "" },
-    { src: "images/photo6.jpg", caption: "" }
+    { src: "photo1.jpg", caption: "" },
+    { src: "photo2.jpg", caption: "" },
+    { src: "photo3.jpg", caption: "" },
+    { src: "photo4.jpg", caption: "" },
+    { src: "photo5.jpg", caption: "" },
+    { src: "photo6.jpg", caption: "" }
     // , { src: "images/photo7.jpg", caption: "" }
     // , { src: "images/photo8.jpg", caption: "" }
   ],
@@ -272,8 +272,8 @@ I love you more than I can explain, babyyyyyyyy.
     "l4.next": "THERE'S MORE I WANT TO TELL YOU →",
 
     /* Level 5 */
-    "l5.title": "Do you remember my brother's wedding? ❤️",
-    "l5.s1": "You came to my brother's wedding, and you gave me my first gift from you…",
+    "l5.title": "Do you remember our brother's wedding? ❤️",
+    "l5.s1": "You came to our brother's wedding, and you gave me my first gift from you…",
     "l5.tap": "Tap the gifts 🎁",
     "l5.from1": "From you",
     "l5.from2": "From me",
