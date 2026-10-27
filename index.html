@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffd9ec">
+  <title>A Very Special Day ❤️</title>
+
+  <!-- Optional pretty fonts. If you are offline, the browser just uses the fallback fonts and everything still works. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!--
+  HOW THIS FILE WORKS (for the IT student 😄)
+  - Every screen is a <section class="screen"> and only ONE is visible at a time.
+  - All the words you read on screen live in script.js (CONFIG.text). Elements with
+    data-t="some.key" get their text from there. So to change a sentence, edit script.js, not this file.
+  - Elements with class "step" appear one by one. "after-intro" appears after the steps.
+    "gated" appears when something is clicked or completed. "next-wrap" holds the Next button.
+-->
+<body data-theme="opening">
+
+  <!-- Background layers (hearts, stars, confetti) -->
+  <div id="ambient" aria-hidden="true"></div>
+  <div id="stars" aria-hidden="true"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <!-- Top bar: back button + progress -->
+  <header id="topbar" class="topbar is-hidden">
+    <button id="backBtn" class="icon-btn" type="button" aria-label="Go back to the previous memory">←</button>
+    <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0">
+      <div id="progressFill"></div>
+    </div>
+    <span id="progressLabel" class="progress-label">0 / 10</span>
+  </header>
+
+  <!-- Music button (never autoplays) -->
+  <button id="musicBtn" class="music-btn" type="button" aria-label="Play music" aria-pressed="false">
+    <span id="musicIcon">♪</span>
+  </button>
+
+  <p id="tapHint" class="tap-hint" aria-hidden="true">tap anywhere to speed up ⏩</p>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <main id="app">
+
+    <!-- ============ SCREEN 1: OPENING ============ -->
+    <section class="screen" id="s0" data-theme="opening">
+      <div class="stack">
+        <h1 class="script big step" data-t="open.hey"></h1>
+        <p class="lead step" data-t="open.made"></p>
+        <p class="lead soft step" data-t="open.back"></p>
+        <div class="next-wrap">
+          <button class="btn primary pulse" type="button" data-next data-t="open.start"></button>
+          <p class="tiny" data-t="open.musicHint"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 1: INSTAGRAM ============ -->
+    <section class="screen" id="l1" data-theme="insta">
+      <div class="stack wide">
+        <h2 class="title step" data-t="l1.title"></h2>
+        <p class="lead step" data-t="l1.s1"></p>
+        <p class="lead step" data-t="l1.s2"></p>
+        <div class="chat card step" data-delay="700">
+          <div class="bubble them step" data-delay="1500">
+            <span class="who" data-t="who.you"></span>
+            <p data-t="l1.b1"></p>
+          </div>
+          <p class="divider step" data-t="l1.later"></p>
+          <div class="bubble them step" data-delay="1300">
+            <span class="who" data-t="who.you"></span>
+            <p data-t="l1.b2"></p>
+          </div>
+          <div class="bubble mine step" data-delay="1800">
+            <span class="who" data-t="who.me"></span>
+            <p data-t="l1.b3"></p>
+          </div>
+        </div>
+        <p class="lead step" data-t="l1.s3"></p>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l1.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 2: REEL CHALLENGE ============ -->
+    <section class="screen" id="l2" data-theme="reel">
+      <div class="stack wide">
+        <h2 class="title step" data-t="l2.title"></h2>
+        <div class="card quiz-card after-intro">
+          <p class="question" data-t="l2.q"></p>
+          <div class="options" id="reelOptions"></div>
+          <p class="feedback" id="reelFeedback" aria-live="polite"></p>
+        </div>
+        <div class="gated" id="reelDone">
+          <p class="lead" data-t="l2.done1"></p>
+          <p class="big-note" data-t="l2.done2"></p>
+        </div>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l2.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 3: GAMING ERA ============ -->
+    <section class="screen" id="l3" data-theme="game">
+      <div class="stack wide">
+        <p class="lead step" data-t="l3.s1"></p>
+        <p class="lead step" data-t="l3.s2"></p>
+        <div class="dialogue step">
+          <p class="you" data-t="l3.you"></p>
+          <p class="me" data-t="l3.me"></p>
+        </div>
+        <div class="card game-card after-intro">
+          <p class="game-inst" id="gameInst"></p>
+          <div class="hud">
+            <span>Score <b id="gScore">0</b> / <b id="gTarget">0</b></span>
+            <span>⏱ <b id="gTime">30</b>s</span>
+          </div>
+          <div class="game-wrap">
+            <canvas id="gameCanvas" aria-label="Heart catching game. Move the basket to catch falling hearts."></canvas>
+            <div class="game-overlay" id="gameOverlay">
+              <p id="gameMsg"></p>
+              <button class="btn primary" type="button" id="gameBtn"></button>
+            </div>
+          </div>
+        </div>
+        <div class="gated" id="gameWin">
+          <h3 class="win-title" data-t="l3.win"></h3>
+          <p id="gameWinSub" class="lead"></p>
+        </div>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l3.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 4: TRUST ============ -->
+    <section class="screen" id="l4" data-theme="trust">
+      <div class="stack calm">
+        <p class="soft-line step" data-t="l4.s1"></p>
+        <p class="soft-line step" data-t="l4.s2"></p>
+        <p class="soft-line step" data-t="l4.s3"></p>
+        <p class="soft-line strong step" data-t="l4.s4"></p>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l4.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 5: WEDDING ============ -->
+    <section class="screen" id="l5" data-theme="wedding">
+      <div class="stack wide">
+        <h2 class="title step" data-t="l5.title"></h2>
+        <p class="lead step" data-t="l5.s1"></p>
+        <div class="after-intro gifts-wrap">
+          <p class="tiny" data-t="l5.tap"></p>
+          <div class="gifts">
+            <button class="gift" id="gift1" type="button" aria-expanded="false">
+              <span class="box" aria-hidden="true">🎁</span>
+              <span class="gift-from" data-t="l5.from1"></span>
+              <span class="gift-reveal">
+                <b data-t="l5.g1"></b>
+                <i data-t="l5.g1b"></i>
+              </span>
+            </button>
+            <button class="gift" id="gift2" type="button" aria-expanded="false">
+              <span class="box" aria-hidden="true">🎁</span>
+              <span class="gift-from" data-t="l5.from2"></span>
+              <span class="gift-reveal">
+                <b data-t="l5.g2"></b>
+                <i data-t="l5.g2b"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+        <p class="big-note gated" id="giftsBoth" data-t="l5.both"></p>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l5.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 6: 29 AUGUST, 10:40 PM ============ -->
+    <section class="screen" id="l6" data-theme="night">
+      <div class="stack">
+        <p class="date-big step" data-t="l6.date"></p>
+        <p class="time-big step" data-t="l6.time"></p>
+        <p class="lead step" data-t="l6.s1"></p>
+        <div class="after-intro">
+          <button class="btn primary pulse" type="button" id="openReel" data-t="l6.open"></button>
+        </div>
+        <div class="reel-card gated" id="reelCard">
+          <!-- Official Instagram embed of the real reel. src is set by script.js when the reel opens. -->
+          <div class="reel-embed">
+            <iframe id="reelFrame" class="reel-frame" title="Our Instagram reel"
+                    data-src="https://www.instagram.com/reel/DaASvESNtc2/embed/"
+                    allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen
+                    scrolling="no" frameborder="0"></iframe>
+            <span class="reel-heart" aria-hidden="true">❤️</span>
+          </div>
+          <p class="reel-cap" data-t="l6.reelcap"></p>
+          <a class="btn ghost reel-link" id="reelLink" href="https://www.instagram.com/reel/DaASvESNtc2/"
+             target="_blank" rel="noopener noreferrer" data-t="l6.watch"></a>
+        </div>
+        <p class="lead gated" id="r1" data-t="l6.r1"></p>
+        <h2 class="yes gated" id="r2" data-t="l6.r2"></h2>
+        <p class="accepted gated" id="r3" data-t="l6.r3"></p>
+        <p class="lead gated" id="r4" data-t="l6.r4"></p>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l6.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 7: 22 SEPTEMBER ============ -->
+    <section class="screen" id="l7" data-theme="dreamy">
+      <div class="stack wide">
+        <h2 class="title step" data-t="l7.title"></h2>
+        <p class="lead step" data-t="l7.s1"></p>
+
+        <!-- Little bike illustration: two riders, spinning wheels, moving road -->
+        <div class="bike-scene step" aria-hidden="true">
+          <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="roadGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#6b4a86"/>
+                <stop offset="1" stop-color="#4a2f63"/>
+              </linearGradient>
+            </defs>
+            <circle cx="340" cy="58" r="34" fill="#ffd9a8" opacity=".9"/>
+            <rect x="0" y="158" width="420" height="42" fill="url(#roadGrad)"/>
+            <line class="road-line" x1="0" y1="180" x2="420" y2="180"/>
+            <g class="bike-body">
+              <!-- bike -->
+              <rect x="100" y="124" width="30" height="6" rx="3" fill="#8a7aa0"/>
+              <path d="M130 132 L168 104 L232 104 L262 132" stroke="#5b3a7a" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="178" y="88" width="52" height="18" rx="9" fill="#ff5c9a"/>
+              <rect x="134" y="96" width="48" height="9" rx="4" fill="#3b2147"/>
+              <line x1="262" y1="132" x2="244" y2="92" stroke="#5b3a7a" stroke-width="5" stroke-linecap="round"/>
+              <line x1="244" y1="92" x2="252" y2="80" stroke="#5b3a7a" stroke-width="5" stroke-linecap="round"/>
+              <line x1="246" y1="80" x2="262" y2="78" stroke="#3b2147" stroke-width="4" stroke-linecap="round"/>
+              <circle cx="268" cy="88" r="5" fill="#ffe08a"/>
+              <!-- Jensi (behind, shorter) -->
+              <line x1="170" y1="100" x2="188" y2="120" stroke="#c23a86" stroke-width="8" stroke-linecap="round"/>
+              <rect x="160" y="66" width="22" height="34" rx="10" fill="#e0489b"/>
+              <circle cx="170" cy="53" r="10.5" fill="#3b2147"/>
+              <circle cx="170" cy="58" r="9.5" fill="#f3cdb0"/>
+              <line x1="176" y1="76" x2="200" y2="80" stroke="#e0489b" stroke-width="6" stroke-linecap="round"/>
+              <!-- Jay (front, taller, curly hair) -->
+              <line x1="208" y1="98" x2="226" y2="122" stroke="#2f2557" stroke-width="9" stroke-linecap="round"/>
+              <rect x="196" y="52" width="24" height="46" rx="11" fill="#4c3a8f"/>
+              <circle cx="198" cy="34" r="5" fill="#2b1b3d"/>
+              <circle cx="203" cy="28" r="5" fill="#2b1b3d"/>
+              <circle cx="210" cy="26" r="5" fill="#2b1b3d"/>
+              <circle cx="217" cy="28" r="5" fill="#2b1b3d"/>
+              <circle cx="222" cy="34" r="5" fill="#2b1b3d"/>
+              <circle cx="210" cy="40" r="12" fill="#f3cdb0"/>
+              <line x1="214" y1="62" x2="250" y2="82" stroke="#4c3a8f" stroke-width="7" stroke-linecap="round"/>
+            </g>
+            <!-- wheels -->
+            <g class="wheel">
+              <circle cx="130" cy="132" r="26" fill="none" stroke="#2b1b3d" stroke-width="6"/>
+              <circle cx="130" cy="132" r="4" fill="#ffd9ec"/>
+              <line x1="110" y1="132" x2="150" y2="132" stroke="#ffd9ec" stroke-width="2"/>
+              <line x1="130" y1="112" x2="130" y2="152" stroke="#ffd9ec" stroke-width="2"/>
+            </g>
+            <g class="wheel">
+              <circle cx="262" cy="132" r="26" fill="none" stroke="#2b1b3d" stroke-width="6"/>
+              <circle cx="262" cy="132" r="4" fill="#ffd9ec"/>
+              <line x1="242" y1="132" x2="282" y2="132" stroke="#ffd9ec" stroke-width="2"/>
+              <line x1="262" y1="112" x2="262" y2="152" stroke="#ffd9ec" stroke-width="2"/>
+            </g>
+          </svg>
+        </div>
+
+        <p class="lead step" data-t="l7.s2"></p>
+        <p class="lead step" data-t="l7.s3"></p>
+        <p class="lead step" data-t="l7.s4"></p>
+        <p class="lead step" data-t="l7.s5"></p>
+        <div class="memory-card step">
+          <span class="tape" aria-hidden="true"></span>
+          <p data-t="l7.card"></p>
+        </div>
+        <p class="lead step" data-t="l7.s6"></p>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l7.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 8: THE BIG QUIZ ============ -->
+    <section class="screen" id="l8" data-theme="quiz">
+      <div class="stack wide">
+        <h2 class="title step" data-t="l8.title"></h2>
+        <p class="lead step" data-t="l8.intro"></p>
+        <div class="card quiz-card after-intro" id="quizCard">
+          <div class="quiz-top">
+            <span id="qCount"></span>
+            <span id="qScore"></span>
+          </div>
+          <div class="q-progress"><div id="qBar"></div></div>
+          <p class="question" id="qText"></p>
+          <div class="options" id="qOptions"></div>
+          <p class="feedback" id="qFeedback" aria-live="polite"></p>
+          <button class="btn primary" type="button" id="qNext" hidden></button>
+        </div>
+        <div class="card gated" id="quizResult">
+          <h3 class="win-title" id="resTitle"></h3>
+          <p class="score-big" id="resScore"></p>
+          <p class="lead" id="resMsg"></p>
+          <button class="btn ghost" type="button" id="quizRetry" data-t="l8.retry"></button>
+        </div>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l8.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 9: DIFFERENT BUT OURS ============ -->
+    <section class="screen" id="l9" data-theme="diff">
+      <div class="stack wide">
+        <h2 class="title step" data-t="l9.title"></h2>
+        <p class="tiny step" data-t="l9.hint"></p>
+        <div class="compare step">
+          <div class="col card col-jay">
+            <h3 data-t="l9.jayTitle"></h3>
+            <ul class="traits" id="jayList"></ul>
+          </div>
+          <div class="col card col-me">
+            <h3 data-t="l9.meTitle"></h3>
+            <ul class="traits" id="meList"></ul>
+          </div>
+        </div>
+        <div class="after-intro cook">
+          <p class="lead" data-t="l9.cook1"></p>
+          <button class="btn primary" type="button" id="cookBtn" data-t="l9.cookBtn"></button>
+          <p class="lead gated" id="cookReveal" data-t="l9.cook2"></p>
+        </div>
+        <div class="gated" id="diffEnd">
+          <p class="lead" data-t="l9.real"></p>
+          <p class="lead" data-t="l9.end1"></p>
+          <p class="big-note" data-t="l9.end2"></p>
+        </div>
+        <div class="next-wrap">
+          <button class="btn primary" type="button" data-next data-t="l9.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LEVEL 10: SECRET PASSWORD ============ -->
+    <section class="screen" id="l10" data-theme="secret">
+      <div class="stack">
+        <p class="lead step" data-t="l10.s1"></p>
+        <p class="lead step" data-t="l10.clue"></p>
+        <form class="card pw-card after-intro" id="pwForm" autocomplete="off" novalidate>
+          <label for="pwInput" class="sr-only">Password</label>
+          <input id="pwInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" data-ph="l10.placeholder">
+          <button class="btn primary" type="submit" data-t="l10.unlock"></button>
+          <p class="feedback" id="pwFeedback" aria-live="polite"></p>
+          <button class="link-btn" type="button" id="pwHint" data-t="l10.hintBtn"></button>
+          <p class="tiny" id="pwHintText" hidden></p>
+        </form>
+        <div class="gated" id="pwOk">
+          <h2 class="access" data-t="l10.ok1"></h2>
+          <p class="lead" data-t="l10.ok2"></p>
+        </div>
+        <div class="next-wrap">
+          <button class="btn primary pulse" type="button" data-next data-t="l10.next"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FINAL BIRTHDAY PAGE ============ -->
+    <section class="screen" id="final" data-theme="final">
+      <header class="final-hero">
+        <p class="mission" data-t="fin.mission"></p>
+        <h1 class="script hb" data-t="fin.hb"></h1>
+        <p class="lead" data-t="fin.sub"></p>
+        <nav class="final-nav" aria-label="Sections">
+          <a href="#memories" data-t="fin.nav1"></a>
+          <a href="#love" data-t="fin.nav2"></a>
+          <a href="#letterSec" data-t="fin.nav3"></a>
+          <a href="#days" data-t="fin.nav4"></a>
+          <a href="#surprise" data-t="fin.nav5"></a>
+        </nav>
+      </header>
+
+      <section id="memories" class="f-sec reveal-on-scroll">
+        <h2 class="sec-title" data-t="fin.h1"></h2>
+        <p class="lead" data-t="fin.galleryIntro"></p>
+        <div class="gallery" id="gallery"></div>
+      </section>
+
+      <section id="love" class="f-sec reveal-on-scroll">
+        <h2 class="sec-title" data-t="fin.h2"></h2>
+        <ul class="love-list" id="loveList"></ul>
+      </section>
+
+      <section id="letterSec" class="f-sec reveal-on-scroll">
+        <h2 class="sec-title" data-t="fin.h3"></h2>
+        <p class="lead" data-t="fin.letterIntro"></p>
+        <button class="btn primary pulse" type="button" id="openLetter" data-t="fin.letterBtn"></button>
+      </section>
+
+      <section id="days" class="f-sec reveal-on-scroll">
+        <h2 class="sec-title" data-t="fin.h4"></h2>
+        <div class="timeline" id="timeline"></div>
+      </section>
+
+      <section id="surprise" class="f-sec reveal-on-scroll">
+        <h2 class="sec-title" data-t="fin.h5"></h2>
+        <div class="card surprise-card">
+          <p class="script surprise-q" data-t="fin.last"></p>
+          <button class="btn primary pulse" type="button" id="lastBtn" data-t="fin.lastBtn"></button>
+        </div>
+      </section>
+
+      <footer class="final-foot">
+        <button class="btn ghost" type="button" id="replayBtn" data-t="fin.replay"></button>
+      </footer>
+    </section>
+
+  </main>
+
+  <!-- ============ OVERLAYS ============ -->
+
+  <!-- Letter -->
+  <div class="overlay" id="letterOverlay" role="dialog" aria-modal="true" aria-labelledby="letterTitle">
+    <div class="letter-paper" id="letterPaper">
+      <button class="btn ghost letter-close" type="button" id="letterClose" data-t="fin.letterClose"></button>
+      <h2 class="sr-only" id="letterTitle">My letter to you</h2>
+      <div id="letterBody"></div>
+      <button class="btn ghost letter-close-bottom" type="button" id="letterClose2" data-t="fin.letterClose"></button>
+    </div>
+  </div>
+
+  <!-- Photo lightbox -->
+  <div class="overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo">
+    <figure class="lb-fig">
+      <img id="lbImg" alt="">
+      <figcaption id="lbCap"></figcaption>
+    </figure>
+  </div>
+
+  <!-- Final full-screen surprise -->
+  <div class="overlay finale" id="finale" role="dialog" aria-modal="true" aria-label="One last surprise">
+    <div class="fin-inner">
+      <p class="fin-msg" id="finStage" aria-live="polite"></p>
+      <div class="fin-end" id="finEnd"></div>
+      <p class="tiny fin-tap" id="finTap">tap to continue</p>
+    </div>
+  </div>
+
+  <audio id="bgm" preload="none" loop></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
